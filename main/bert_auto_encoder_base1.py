@@ -31,7 +31,7 @@ class Model(nn.Module):
     def __init__(self):
         super(Model, self).__init__()
         self.bert_output = []
-        self.bert = BertModel.from_pretrained(config.bert_config)
+        self.bert = BertModel(config.bert_config)
         self.encoder = nn.Sequential(
             nn.Linear(768, 128),
             nn.ReLU(True),
