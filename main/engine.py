@@ -5,11 +5,11 @@ from tqdm import tqdm
 def loss_fn(outputs, targets):
     return nn.MSELoss()(outputs, targets)
 
-def train(data_loader, model, optimizer, device, scheduler):
+def train_fn(data_loader, model, optimizer, device, scheduler):
     model.train()
 
     loss = 0
-    
+
     for  batch_index, data in tqdm(enumerate(data_loader), total=len(data_loader)):
         if next(model.parameters()).is_cuda:
              data = [t.to("cuda:0") for t in data if t is not None]
