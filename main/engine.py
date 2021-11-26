@@ -17,7 +17,9 @@ def train_fn(data_loader, model, optimizer, device, scheduler):
         tokens_tensors, segments_tensors, masks_tensors = data[:3]
 
         optimizer.zero_grad()
-        outputs = model(input_ids=tokens_tensors, attention_mask=masks_tensors, token_type_ids=segments_tensors)
+        outputs = model(tokens_tensors=tokens_tensors,
+                        segments_tensors=segments_tensors,
+                        masks_tensors=masks_tensors)
         targets = model.bert_output
 
         loss = loss_fn(outputs, targets)

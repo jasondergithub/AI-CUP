@@ -48,7 +48,7 @@ class Model(nn.Module):
             nn.Linear(128, 768)
         )
 
-    def forward(self, data): # data: (batch, seq_len)
+    def forward(self, tokens_tensors, segments_tensors, masks_tensors): # data: (batch, seq_len)
         tokens_tensors, segments_tensors, masks_tensors = data[:3]
         outputs = self.bert(input_ids = tokens_tensors, token_type_ids = segments_tensors, 
             attention_mask = masks_tensors)
