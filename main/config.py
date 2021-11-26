@@ -1,7 +1,9 @@
-from transformers import BertConfig
+from transformers import BertConfig, BertTokenizer
 
 DEVICE = "cuda"
 EPOCHS = 10
+BATCH_SIZE = 32
+tokenizer = BertTokenizer.from_pretrained('bert-base-chinese')
 MODEL_PATH = "../saved_model"
 
 bert_config = BertConfig.from_pretrained('bert-base-chinese')
