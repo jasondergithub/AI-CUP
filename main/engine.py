@@ -8,6 +8,8 @@ def loss_fn(outputs, targets):
 def train(data_loader, model, optimizer, device, scheduler):
     model.train()
 
+    loss = 0
+    
     for  batch_index, data in tqdm(enumerate(data_loader), total=len(data_loader)):
         if next(model.parameters()).is_cuda:
              data = [t.to("cuda:0") for t in data if t is not None]
@@ -22,6 +24,8 @@ def train(data_loader, model, optimizer, device, scheduler):
         loss.backward()
         optimizer.step()
         scheduler.step()
+
+    return loss
 
 def eval_fn(data_loader, model, device):
     model.eval()
