@@ -21,6 +21,7 @@ def create_mini_batch(samples):
                                                                     
     return tokens_tensors, segments_tensors, masks_tensors
 
+'''
 BATCH_SIZE = 32
 trainloader = DataLoader(dataset.trainset, batch_size=BATCH_SIZE, collate_fn=create_mini_batch)
 
@@ -36,4 +37,5 @@ segments_tensors.shape = {segments_tensors.shape}
 ------------------------
 masks_tensors.shape    = {masks_tensors.shape}
 {masks_tensors}
-""")    
+""")
+'''    

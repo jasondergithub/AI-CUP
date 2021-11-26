@@ -42,7 +42,7 @@ class encoderDataset(Dataset):
 
     def __len__(self):
         return self.len
-
+'''
 from transformers import BertTokenizer
 tokenizer = BertTokenizer.from_pretrained('bert-base-chinese')
 trainset = encoderDataset('train', tokenizer)
@@ -77,3 +77,4 @@ segments_tensor：{segments_tensor}
 [還原 tokens_tensors]
 {combined_text}
 """)
+'''
