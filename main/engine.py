@@ -21,7 +21,8 @@ def train_fn(data_loader, model, optimizer, device, scheduler):
                         segments_tensors=segments_tensors,
                         masks_tensors=masks_tensors)
         targets = model.bert_output
-
+        targets = torch.stack(targets) # transform list of tensors to tensor
+        
         loss = loss_fn(outputs, targets)
         loss.backward()
         optimizer.step()
