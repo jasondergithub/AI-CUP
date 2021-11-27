@@ -21,6 +21,7 @@ def train_fn(data_loader, model, optimizer, device, scheduler):
                         segments_tensors=segments_tensors,
                         masks_tensors=masks_tensors)
         targets = model.bert_output[0]
+        del model.bert_output[0]
         #targets = torch.stack(targets) # transform list of tensors to tensor
         print(outputs.shape)
         loss = loss_fn(outputs, targets)
