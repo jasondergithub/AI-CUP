@@ -3,7 +3,7 @@ from transformers.models import bert
 
 DEVICE = "cuda"
 EPOCHS = 10
-BATCH_SIZE = 32
+BATCH_SIZE = 16
 tokenizer = BertTokenizer.from_pretrained('bert-base-chinese')
 MODEL_PATH = "../saved_model"
 
