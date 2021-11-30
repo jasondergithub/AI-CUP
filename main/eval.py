@@ -21,13 +21,15 @@ tokens_tensors, segments_tensors = trainset.__getitem__(0)
 masks_tensors = torch.zeros(tokens_tensors.shape, dtype=torch.long)
 masks_tensors = masks_tensors.masked_fill(tokens_tensors != 0, 1)
 
-model.eval()
-outputs = model(tokens_tensors=tokens_tensors,
-                segments_tensors=segments_tensors,
-                masks_tensors=masks_tensors)
-targets = model.bert_output[0]
-del model.bert_output[0]
+# model.eval()
+# outputs = model(tokens_tensors=tokens_tensors,
+#                 segments_tensors=segments_tensors,
+#                 masks_tensors=masks_tensors)
+# targets = model.bert_output[0]
+# del model.bert_output[0]
 
-loss = torch.nn.MSELoss()
-output = loss(outputs, targets)
-print(f'sample 0 loss = {loss}')
+# loss = torch.nn.MSELoss()
+# output = loss(outputs, targets)
+# print(f'sample 0 loss = {loss}')
+print(f'mask shape: {masks_tensors.shape}')
+print(f'token shape: {tokens_tensors.shape}')
