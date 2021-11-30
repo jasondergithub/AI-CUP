@@ -22,7 +22,6 @@ masks_tensors = torch.zeros(tokens_tensors.shape, dtype=torch.long)
 masks_tensors = masks_tensors.masked_fill(tokens_tensors != 0, 1)
 
 model.eval()
-output = model()
 outputs = model(tokens_tensors=tokens_tensors,
                 segments_tensors=segments_tensors,
                 masks_tensors=masks_tensors)
