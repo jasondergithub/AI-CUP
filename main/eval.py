@@ -20,7 +20,9 @@ tokens_tensors, segments_tensors = trainset.__getitem__(0)
 # segments_tensors = pad_sequence(segments_tensors, batch_first=True)
 masks_tensors = torch.zeros(tokens_tensors.shape, dtype=torch.long)
 masks_tensors = masks_tensors.masked_fill(tokens_tensors != 0, 1)
-
+tokens_tensors = tokens_tensors.unsqueeze(0)
+segments_tensors = segments_tensors.unsqueeze(0)
+masks_tensors = masks_tensors.unsqueeze(0)
 # model.eval()
 # outputs = model(tokens_tensors=tokens_tensors,
 #                 segments_tensors=segments_tensors,
