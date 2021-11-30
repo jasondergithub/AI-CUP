@@ -16,8 +16,7 @@ model.to(device)
 
 trainset = encoderDataset('train', config.tokenizer)
 tokens_tensors, segments_tensors = trainset.__getitem__(0)
-# tokens_tensors = pad_sequence(tokens_tensors, batch_first=True)                                      
-# segments_tensors = pad_sequence(segments_tensors, batch_first=True)
+
 masks_tensors = torch.zeros(tokens_tensors.shape, dtype=torch.long)
 masks_tensors = masks_tensors.masked_fill(tokens_tensors != 0, 1)
 tokens_tensors = tokens_tensors.unsqueeze(0)
@@ -27,8 +26,7 @@ masks_tensors = masks_tensors.unsqueeze(0)
 tokens_tensors = tokens_tensors.to(device)
 masks_tensors = masks_tensors.to(device)
 segments_tensors = segments_tensors.to(device)
-# if tokens_tensors.is_cuda & masks_tensors.is_cuda & segments_tensors.is_cuda:
-#     print(f'three tensors are on cuda')
+
 model.eval()
 outputs = model(tokens_tensors=tokens_tensors,
                 segments_tensors=segments_tensors,
@@ -38,4 +36,45 @@ del model.bert_output[0]
 
 loss = torch.nn.MSELoss()
 output = loss(outputs, targets)
-print(f'sample 0 loss = {loss}')
+print(f'sample 0 loss = {output}')
+
+print('======================================================================================')
+
+with open('../processed_files/' + str(30) + '.txt', 'r', encoding='UTF-8') as text1:
+    file1 = text1.read()
+with open('../processed_files/' + str(5) + '.txt', 'r', encoding='UTF-8') as text2:
+    file2 = text2.read() 
+wordpieces = ['[CLS]']
+tokens1 = config.tokenizer.tokenize(file1)
+wordpieces += tokens1 + ['[SEP]']
+article1_len = len(wordpieces)
+tokens2 = config.tokenizer.tokenize(file2)
+wordpieces += tokens2 + ['[SEP]']
+article2_len = len(wordpieces) - article1_len
+
+ids = config.tokenizer.convert_tokens_to_ids(wordpieces)
+tokens_tensor = torch.tensor(ids)
+segments_tensor = torch.tensor([0] * article1_len + [1] * article2_len, dtype=torch.long)
+trainset = encoderDataset('train', config.tokenizer)
+tokens_tensors, segments_tensors = trainset.__getitem__(0)
+
+masks_tensors = torch.zeros(tokens_tensors.shape, dtype=torch.long)
+masks_tensors = masks_tensors.masked_fill(tokens_tensors != 0, 1)
+tokens_tensors = tokens_tensors.unsqueeze(0)
+segments_tensors = segments_tensors.unsqueeze(0)
+masks_tensors = masks_tensors.unsqueeze(0)
+
+tokens_tensors = tokens_tensors.to(device)
+masks_tensors = masks_tensors.to(device)
+segments_tensors = segments_tensors.to(device)
+
+model.eval()
+outputs = model(tokens_tensors=tokens_tensors,
+                segments_tensors=segments_tensors,
+                masks_tensors=masks_tensors)
+targets = model.bert_output[0]
+del model.bert_output[0]
+loss = torch.nn.MSELoss()
+output = loss(outputs, targets)
+
+print(f'loss between unrelated articles 30 and 5: {output}')
