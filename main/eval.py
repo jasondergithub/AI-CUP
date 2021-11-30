@@ -38,9 +38,9 @@ model.to(device)
 
 # print('======================================================================================')
 
-with open('../processed_files/' + str(32) + '.txt', 'r', encoding='UTF-8') as text1:
+with open('../processed_files/' + str(40) + '.txt', 'r', encoding='UTF-8') as text1:
     file1 = text1.read()
-with open('../processed_files/' + str(5) + '.txt', 'r', encoding='UTF-8') as text2:
+with open('../processed_files/' + str(1049) + '.txt', 'r', encoding='UTF-8') as text2:
     file2 = text2.read() 
 wordpieces = ['[CLS]']
 tokens1 = config.tokenizer.tokenize(file1)
