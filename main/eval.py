@@ -32,9 +32,9 @@ model.eval()
 outputs = model(tokens_tensors=tokens_tensors,
                 segments_tensors=segments_tensors,
                 masks_tensors=masks_tensors)
-targets = model.bert_output[0]
-del model.bert_output[0]
+# targets = model.bert_output[0]
+# del model.bert_output[0]
 
-loss = torch.nn.MSELoss()
-output = loss(outputs, targets)
-print(f'sample 0 loss = {loss}')
+# loss = torch.nn.MSELoss()
+# output = loss(outputs, targets)
+# print(f'sample 0 loss = {loss}')
