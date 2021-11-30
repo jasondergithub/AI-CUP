@@ -40,7 +40,7 @@ print(f'sample 0 loss = {output}')
 
 print('======================================================================================')
 
-with open('../processed_files/' + str(30) + '.txt', 'r', encoding='UTF-8') as text1:
+with open('../processed_files/' + str(32) + '.txt', 'r', encoding='UTF-8') as text1:
     file1 = text1.read()
 with open('../processed_files/' + str(5) + '.txt', 'r', encoding='UTF-8') as text2:
     file2 = text2.read() 
@@ -77,4 +77,4 @@ del model.bert_output[0]
 loss = torch.nn.MSELoss()
 output = loss(outputs, targets)
 
-print(f'loss between unrelated articles 30 and 5: {output}')
+print(f'loss between unrelated articles 32 and 5: {output}')
