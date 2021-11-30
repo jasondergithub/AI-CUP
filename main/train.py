@@ -48,6 +48,9 @@ def run_train():
     for epoch in range(config.EPOCHS):
         loss = engine.train_fn(train_data_loader, model, optimizer, device, scheduler)
         print(f'Epoch:{epoch+1}, Loss:{loss.item():.4f}')
+
+    #save model
+    torch.save(model.state_dict(), config.MODEL_PATH)
     
 if __name__ == "__main__":
     run_train()
