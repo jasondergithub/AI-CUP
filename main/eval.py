@@ -24,9 +24,9 @@ tokens_tensors = tokens_tensors.unsqueeze(0)
 segments_tensors = segments_tensors.unsqueeze(0)
 masks_tensors = masks_tensors.unsqueeze(0)
 
-tokens_tensors.to(device)
-masks_tensors.to(device)
-segments_tensors.to(device)
+tokens_tensors = tokens_tensors.to(device)
+masks_tensors = masks_tensors.to(device)
+segments_tensors = segments_tensors.to(device)
 if tokens_tensors.is_cuda & masks_tensors.is_cuda & segments_tensors.is_cuda:
     print(f'three tensors are on cuda')
 model.eval()
