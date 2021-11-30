@@ -24,6 +24,10 @@ tokens_tensors = tokens_tensors.unsqueeze(0)
 segments_tensors = segments_tensors.unsqueeze(0)
 masks_tensors = masks_tensors.unsqueeze(0)
 
+tokens_tensors.to(device)
+masks_tensors.to(device)
+segments_tensors.to(device)
+
 model.eval()
 outputs = model(tokens_tensors=tokens_tensors,
                 segments_tensors=segments_tensors,
