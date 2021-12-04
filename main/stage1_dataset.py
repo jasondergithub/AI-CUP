@@ -20,6 +20,7 @@ class ArticleClassificationDataset(Dataset):
         if self.mode == 'train':
             num1 = self.pairingTable[index][0]
             num2 = self.pairingTable[index][1]
+            label = self.pairingTable[index][2]
             with open('../processed_files/' + str(num1) + '.txt', 'r', encoding='UTF-8') as text1:
                 file1 = text1.read()
             with open('../processed_files/' + str(num2) + '.txt', 'r', encoding='UTF-8') as text2:
@@ -29,8 +30,10 @@ class ArticleClassificationDataset(Dataset):
                 file1,
                 file2,
                 add_special_tokens = True,
-                # max_length = max(len(file1), len(file2)),
-                # pad_to_max_length = True
+                max_length = 1500,
+                truncation=True,
+                #pad_to_max_length = True
+                padding = 'longest'
             ) 
 
             tokens_tensor = inputs["input_ids"]
@@ -40,7 +43,8 @@ class ArticleClassificationDataset(Dataset):
         return {
             'tokens_tensor' : torch.tensor(tokens_tensor, dtype=torch.long),
             'segments_tensor': torch.tensor(segments_tensor, dtype=torch.long),
-            'masks_tensor' : torch.tensor(masks_tensor, dtype=torch.long)
+            'masks_tensor' : torch.tensor(masks_tensor, dtype=torch.long),
+            'target' : torch.tensor(label, dtype=torch.float)
         }
     
     def __len__(self):
@@ -76,9 +80,21 @@ segments_tensor：{token_dict['segments_tensor']}
 
 masks_tensor : {token_dict['masks_tensor']}
 
+label_tensor : {token_dict['target']}
 --------------------
 
 [還原 tokens_tensors]
 {combined_text}
 """)
+
+# trainset = ArticleClassificationDataset('train', 1)
+# token_dict = trainset[0]
+
+print(f"length of seg: {len(token_dict['segments_tensor'])}")
+print(f"length of mask: {len(token_dict['masks_tensor'])}")
+
+token_dict = trainset[1]
+
+print(f"length of seg: {len(token_dict['segments_tensor'])}")
+print(f"length of mask: {len(token_dict['masks_tensor'])}")
 '''
