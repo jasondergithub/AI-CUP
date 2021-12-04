@@ -1,0 +1,84 @@
+import pickle
+from numpy import dtype
+import pandas as pd
+import torch
+import config
+
+from torch.utils.data import Dataset
+
+class ArticleClassificationDataset(Dataset):
+    def __init__(self, mode, tableNumber):
+        assert mode in ['train', 'test']
+        self.mode = mode
+        with open('../table/table'+ str(tableNumber) +'.txt', 'rb') as fp:
+            table = pickle.load(fp)
+        self.pairingTable =table 
+        self.len = len(table)
+        self.tokenizer = config.tokenizer
+    
+    def __getitem__(self, index):
+        if self.mode == 'train':
+            num1 = self.pairingTable[index][0]
+            num2 = self.pairingTable[index][1]
+            with open('../processed_files/' + str(num1) + '.txt', 'r', encoding='UTF-8') as text1:
+                file1 = text1.read()
+            with open('../processed_files/' + str(num2) + '.txt', 'r', encoding='UTF-8') as text2:
+                file2 = text2.read()
+
+            inputs = self.tokenizer.encode_plus(
+                file1,
+                file2,
+                add_special_tokens = True,
+                # max_length = max(len(file1), len(file2)),
+                # pad_to_max_length = True
+            ) 
+
+            tokens_tensor = inputs["input_ids"]
+            segments_tensor = inputs["token_type_ids"]
+            masks_tensor = inputs["attention_mask"]
+        
+        return {
+            'tokens_tensor' : torch.tensor(tokens_tensor, dtype=torch.long),
+            'segments_tensor': torch.tensor(segments_tensor, dtype=torch.long),
+            'masks_tensor' : torch.tensor(masks_tensor, dtype=torch.long)
+        }
+    
+    def __len__(self):
+        return self.len
+
+
+'''
+trainset = ArticleClassificationDataset('train', 1)
+token_dict = trainset[0]
+
+tokens = config.tokenizer.convert_ids_to_tokens(token_dict['tokens_tensor'].tolist())
+combined_text = "".join(tokens)
+
+with open('../table/table'+ str(1) +'.txt', 'rb') as fp:
+    table = pickle.load(fp)
+
+with open('../processed_files/' + str(table[0][0]) + '.txt', 'r', encoding='UTF-8') as text1:
+    file1 = text1.read()
+with open('../processed_files/' + str(table[0][1]) + '.txt', 'r', encoding='UTF-8') as text2:
+    file2 = text2.read()
+
+# 渲染前後差異，毫無反應就是個 print。可以直接看輸出結果
+print(f"""[原始文本]
+句子 1：{file1}
+句子 2：{file2}
+
+--------------------
+
+[Dataset 回傳的 tensors]
+tokens_tensor  ：{token_dict['tokens_tensor']}
+
+segments_tensor：{token_dict['segments_tensor']}
+
+masks_tensor : {token_dict['masks_tensor']}
+
+--------------------
+
+[還原 tokens_tensors]
+{combined_text}
+""")
+'''
