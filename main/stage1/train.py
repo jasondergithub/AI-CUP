@@ -2,21 +2,24 @@ import config
 import data_loader
 import engine
 import pandas as pd
+import pickle
+import numpy as np
 import torch
 import torch.nn as nn
 
-from bert_auto_encoder_base1 import Model
-from dataset import encoderDataset
+from stage1_dataset import ArticleClassificationDataset
 from torch.utils.data import DataLoader
+from transformers import BertForSequenceClassification
 from transformers import AdamW
 from transformers import get_linear_schedule_with_warmup
+from sklearn import metrics
 
-def run_train():
-    trainset = encoderDataset('train', config.tokenizer)
-    train_data_loader = DataLoader(trainset, batch_size=config.BATCH_SIZE, collate_fn=data_loader.create_mini_batch)
+def run_train(tableNumber):
+    trainset = ArticleClassificationDataset('train', tableNumber)
+    train_data_loader = DataLoader(trainset, batch_size=config.BATCH_SIZE, num_workers=4)
 
     device = torch.device(config.DEVICE)
-    model = Model()
+    model =  BertForSequenceClassification(config.bert_config)
     model.to(device)
     
     # I am not familiar with this part yet
@@ -37,20 +40,29 @@ def run_train():
         },
     ]
 
-    length_df = len(pd.read_csv('../data/TrainLabel.csv'))
+
+    with open('../../table/table'+ str(tableNumber) +'.txt', 'rb') as fp:
+        table = pickle.load(fp)
+    length_df = len(table)
     num_train_steps = int(length_df / config.BATCH_SIZE * config.EPOCHS)
     optimizer = AdamW(optimizer_parameters, lr=3e-5)
     scheduler = get_linear_schedule_with_warmup(
         optimizer, num_warmup_steps=0, num_training_steps=num_train_steps
     )
     #########
+    
+    #best_accuracy = 0
 
     for epoch in range(config.EPOCHS):
         loss = engine.train_fn(train_data_loader, model, optimizer, device, scheduler)
         print(f'Epoch:{epoch+1}, Loss:{loss.item():.4f}')
-
+        outputs, targets = engine.eval_fn(train_data_loader, model, device)
+        outputs = np.array(outputs) >= 0.5
+        accuracy = metrics.accuracy_score(targets, outputs)
+        print(f"After training {epoch+1} epoch(s), Accuracy Score = {accuracy}")
     #save model
     torch.save(model.state_dict(), config.MODEL_PATH)
     
 if __name__ == "__main__":
-    run_train()
+    for i in range(10):
+        run_train(i+1)

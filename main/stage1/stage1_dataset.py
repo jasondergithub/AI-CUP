@@ -10,7 +10,7 @@ class ArticleClassificationDataset(Dataset):
     def __init__(self, mode, tableNumber):
         assert mode in ['train', 'test']
         self.mode = mode
-        with open('../table/table'+ str(tableNumber) +'.txt', 'rb') as fp:
+        with open('../../table/table'+ str(tableNumber) +'.txt', 'rb') as fp:
             table = pickle.load(fp)
         self.pairingTable =table 
         self.len = len(table)
@@ -21,9 +21,9 @@ class ArticleClassificationDataset(Dataset):
             num1 = self.pairingTable[index][0]
             num2 = self.pairingTable[index][1]
             label = self.pairingTable[index][2]
-            with open('../processed_files/' + str(num1) + '.txt', 'r', encoding='UTF-8') as text1:
+            with open('../../processed_files/' + str(num1) + '.txt', 'r', encoding='UTF-8') as text1:
                 file1 = text1.read()
-            with open('../processed_files/' + str(num2) + '.txt', 'r', encoding='UTF-8') as text2:
+            with open('../../processed_files/' + str(num2) + '.txt', 'r', encoding='UTF-8') as text2:
                 file2 = text2.read()
 
             inputs = self.tokenizer.encode_plus(
