@@ -1,6 +1,7 @@
 import config
 import engine
 import pickle
+import data_loader
 import numpy as np
 import torch
 import torch.nn as nn
@@ -14,7 +15,7 @@ from sklearn import metrics
 
 def run_train(tableNumber):
     trainset = ArticleClassificationDataset('train', tableNumber)
-    train_data_loader = DataLoader(trainset, batch_size=config.BATCH_SIZE, num_workers=4)
+    train_data_loader = DataLoader(trainset, batch_size=config.BATCH_SIZE, collate_fn=data_loader.create_mini_batch)
 
     device = torch.device(config.DEVICE)
     model =  BertForSequenceClassification(config.bert_config)

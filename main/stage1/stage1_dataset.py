@@ -1,10 +1,10 @@
 import pickle
-from numpy import dtype
 import pandas as pd
 import torch
 import config
 
 from torch.utils.data import Dataset
+from torch.utils.data import DataLoader
 
 class ArticleClassificationDataset(Dataset):
     def __init__(self, mode, tableNumber):
@@ -30,10 +30,10 @@ class ArticleClassificationDataset(Dataset):
                 file1,
                 file2,
                 add_special_tokens = True,
-                max_length = 1500,
+                # max_length = 1500,
                 truncation=True,
                 #pad_to_max_length = True
-                padding = 'longest'
+                padding = True
             ) 
 
             tokens_tensor = inputs["input_ids"]
@@ -98,3 +98,21 @@ token_dict = trainset[1]
 print(f"length of seg: {len(token_dict['segments_tensor'])}")
 print(f"length of mask: {len(token_dict['masks_tensor'])}")
 '''
+
+# trainset = ArticleClassificationDataset('train', 1)
+# train_data_loader = DataLoader(trainset, batch_size=config.BATCH_SIZE)
+# data = next(iter(train_data_loader))
+
+# print(f"""
+# tokens_tensors.shape   = {data['tokens_tensor'].shape} 
+# {data['tokens_tensor']}
+# ------------------------
+# segments_tensors.shape = {data['segments_tensor'].shape}
+# {data['segments_tensor']}
+# ------------------------
+# masks_tensors.shape    = {data['masks_tensor'].shape}
+# {data['masks_tensor']}
+# ------------------------
+# label_ids.shape        = {data['target'].shape}
+# {data['target']}
+# """)
