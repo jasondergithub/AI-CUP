@@ -30,7 +30,7 @@ class ArticleClassificationDataset(Dataset):
                 file1,
                 file2,
                 add_special_tokens = True,
-                # max_length = 1500,
+                max_length = 1500,
                 truncation=True,
                 #pad_to_max_length = True
                 padding = True
