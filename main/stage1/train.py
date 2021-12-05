@@ -1,7 +1,5 @@
 import config
-import data_loader
 import engine
-import pandas as pd
 import pickle
 import numpy as np
 import torch
@@ -20,6 +18,8 @@ def run_train(tableNumber):
 
     device = torch.device(config.DEVICE)
     model =  BertForSequenceClassification(config.bert_config)
+    if tableNumber > 1:
+        model.load_state_dict(torch.load(config.MODEL_PATH))
     model.to(device)
     
     # I am not familiar with this part yet
@@ -54,9 +54,9 @@ def run_train(tableNumber):
     #best_accuracy = 0
 
     for epoch in range(config.EPOCHS):
-        loss = engine.train_fn(train_data_loader, model, optimizer, device, scheduler)
+        outputs, targets, loss = engine.train_fn(train_data_loader, model, optimizer, device, scheduler)
         print(f'Epoch:{epoch+1}, Loss:{loss.item():.4f}')
-        outputs, targets = engine.eval_fn(train_data_loader, model, device)
+
         outputs = np.array(outputs) >= 0.5
         accuracy = metrics.accuracy_score(targets, outputs)
         print(f"After training {epoch+1} epoch(s), Accuracy Score = {accuracy}")

@@ -8,7 +8,8 @@ def loss_fn(outputs, targets):
 
 def train_fn(data_loader, model, optimizer, device, scheduler):
     model.train()
-
+    fin_targets = []
+    fin_outputs = []
     running_loss = 0
     for batch_index, data in tqdm(enumerate(data_loader), total=len(data_loader)):
         tokens_tensor = data['tokens_tensor']
@@ -30,9 +31,11 @@ def train_fn(data_loader, model, optimizer, device, scheduler):
         optimizer.step()
         scheduler.step()
 
+        fin_targets.extend(targets.cpu().detach().numpy().tolist())
+        fin_outputs.extend(torch.sigmoid(logits).cpu().detach().numpy().tolist())
         running_loss += loss.item()
 
-    return running_loss    
+    return fin_outputs, fin_targets, running_loss    
 
 def eval_fn(data_loader, model, device):
     model.eval()
