@@ -25,7 +25,8 @@ def train_fn(data_loader, model, optimizer, device, scheduler):
         optimizer.zero_grad()
         outputs = model(input_ids=tokens_tensor, token_type_ids=segments_tensor, attention_mask=masks_tensor)
         logits = outputs.logits
-
+        logits = logits.squeeze(1)
+        
         loss = loss_fn(logits, targets)
         loss.backward()
         optimizer.step()
