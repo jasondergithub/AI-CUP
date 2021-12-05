@@ -22,7 +22,7 @@ def train_fn(data_loader, model, optimizer, device, scheduler):
         masks_tensor = masks_tensor.to(device, dtype=torch.long)
         targets = targets.to(device, dtype=torch.float)
 
-        optimizer.zerp_grad()
+        optimizer.zero_grad()
         outputs = model(input_ids=tokens_tensor, token_type_ids=segments_tensor, attention_mask=masks_tensor)
         logits = outputs.logits
 
