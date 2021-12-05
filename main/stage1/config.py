@@ -5,7 +5,7 @@ DEVICE = "cuda"
 EPOCHS = 2
 BATCH_SIZE = 16
 tokenizer = BertTokenizer.from_pretrained('bert-base-chinese')
-MODEL_PATH = "../dict/saved_model.pth"
+MODEL_PATH = "../../dict/saved_model.pth"
 
 bert_config = BertConfig.from_pretrained('bert-base-chinese')
 bert_config.num_labels = 1
